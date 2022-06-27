@@ -1,3 +1,5 @@
+/*! Element Plus v2.2.6 */
+
 let zhCn = {
   name: "zh-cn",
   el: {
