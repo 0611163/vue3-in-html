@@ -1,14 +1,17 @@
+import { loadVue } from "/js/loadHtml.js";
 import { useMap } from './map.js'
 import { createMarker } from './marker.js'
 import { markerIcon, qiangjiIcon } from './icon.js'
 import { initControlButtons } from '../views/controlButtons.js'
-import { initSwitchMapControl } from '../views/switchMapControl.js'
-import { componentName } from '../../components/Maps/MapPage2.js'
 import { useVuexStore } from './vuexStore.js'
 
-function useMapIndex() {
+async function useMapIndex() {
     let vuexStoreContainer = useVuexStore();
     let { map, deviceLayer, switchMap } = useMap(vuexStoreContainer);
+
+    let componentName = "mapPage2";
+
+    let { initSwitchMapControl } = await loadVue("/map/views/switchMapControl.vue", "switchMapControlContainer", componentName);
 
     initControlButtons(map, componentName, vuexStoreContainer);
     initSwitchMapControl(switchMap, componentName, vuexStoreContainer);

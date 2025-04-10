@@ -1,35 +1,37 @@
-import { createMapPage } from '../components/Maps/MapPage.js'
-import { createSuperMapPage } from '../components/Maps/SuperMapPage.js'
-import { BaiduMapPage } from '../components/Maps/BaiduMapPage.js'
-import { createMapPage2 } from '../components/Maps/MapPage2.js'
+import { loadVue } from "/js/loadHtml.js";
 
 async function createRouter() {
 
-  const routes = [
-    {
-      path: '/',
-      component: createMapPage
-    },
-    {
-      path: '/baiduMap',
-      component: BaiduMapPage
-    },
-    {
-      path: '/supermap',
-      component: createSuperMapPage
-    },
-    {
-      path: '/map2',
-      component: createMapPage2
-    }
-  ]
+    let { BaiduMapPage } = await loadVue("/components/Maps/BaiduMapPage.vue", "baiduMapPage");
+    let { createMapPage } = await loadVue("/components/Maps/MapPage.vue", "mapPage");
+    let { createSuperMapPage } = await loadVue("/components/Maps/SuperMapPage.vue", "supermapPage");
+    let { createMapPage2 } = await loadVue("/components/Maps/MapPage2.vue", "mapPage2");
 
-  const router = VueRouter.createRouter({
-    history: VueRouter.createMemoryHistory(),
-    routes,
-  })
+    const routes = [
+        {
+            path: '/',
+            component: createMapPage
+        },
+        {
+            path: '/baiduMap',
+            component: BaiduMapPage
+        },
+        {
+            path: '/supermap',
+            component: createSuperMapPage
+        },
+        {
+            path: '/map2',
+            component: createMapPage2
+        }
+    ]
 
-  return router;
+    const router = VueRouter.createRouter({
+        history: VueRouter.createMemoryHistory(),
+        routes,
+    })
+
+    return router;
 
 }
 

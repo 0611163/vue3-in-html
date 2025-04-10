@@ -23,7 +23,43 @@
     </el-row>
 
     <el-row>
-      <div class="content"><span>这是Test2组件内容，它的文件在子路径下</span></div>
+      <div class="content">
+        <span>这是Test2组件内容，它的文件在子路径下</span>
+      </div>
     </el-row>
   </div>
 </template>
+
+<script>
+/**
+ * 测试组件在子路径下
+ */
+
+import { loadTemplate } from "/js/loadVue.js";
+import {
+  defineComponent,
+  reactive,
+  computed,
+  toRefs,
+  ref,
+  getCurrentInstance,
+} from "/js/importVue.js";
+
+//组件定义
+let componentName = "test2";
+
+async function createTest2() {
+  let template = await loadTemplate(componentName, "Test2/");
+
+  return defineComponent({
+    name: componentName,
+    template: template,
+    beforeCreate() {},
+    setup(props, context) {
+      return {};
+    },
+  });
+}
+
+export { createTest2, componentName };
+</script>

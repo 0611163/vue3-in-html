@@ -23,9 +23,50 @@
     </el-row>
 
     <el-row>
-      <div class="content"><span>这是Test组件内容</span></div>
+      <div class="content">
+        <span>这是Test组件内容</span>
+      </div>
     </el-row>
 
     <test-2></test-2>
   </div>
 </template>
+
+<script>
+import { loadVue } from "/js/loadHtml.js";
+import { loadTemplate } from "/js/loadVue.js";
+import {
+  defineComponent,
+  reactive,
+  computed,
+  toRefs,
+  ref,
+  getCurrentInstance,
+} from "/js/importVue.js";
+
+let { createTest2 } = await loadVue("/components/Test2/Test2.vue", "test2");
+
+//组件定义
+let componentName = "test";
+
+async function createTest() {
+  let [template, Test2] = await Promise.all([
+    loadTemplate(componentName),
+    createTest2(),
+  ]);
+
+  return defineComponent({
+    name: componentName,
+    template: template,
+    components: {
+      Test2,
+    },
+    beforeCreate() {},
+    setup(props, context) {
+      return {};
+    },
+  });
+}
+
+export { createTest, componentName };
+</script>

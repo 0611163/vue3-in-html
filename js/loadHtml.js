@@ -1,8 +1,9 @@
-import { nanoid } from '../libs/nanoid/nanoid.js'
+//异步加载 html 和 vue 文件
 
 let regTmpl = /<template[^>]*>([\s\S]*)<\/template[^>]*>/;
 let regStyle = /<style(?:(?!scoped))*>((?:(?!<\/style[^>]*>)[\s\S])*)<\/style[^>]*>/;
 let regScopedStyle = /<style[^>]*scoped[^>]*>((?:(?!<\/style[^>]*>)[\s\S])*)<\/style[^>]*>/;
+let regScript = /<script[^>]*>([\s\S]*)<\/script[^>]*>/;
 let regCssItem = /([^\{\}]*\{[^\{\}]*\})/ig;
 
 /**
@@ -31,7 +32,7 @@ function request(url) {
 }
 
 /**
- * 同步加载html
+ * 加载html
  * @param {string} url html的url地址
  * @param {string} containerId div容器id
  * @param {string} mountedElementId 挂载节点id,不传则挂在body下面
@@ -51,7 +52,7 @@ async function loadHtml(url, containerId, mountedElementId = undefined) {
 }
 
 /**
- * 同步加载vue文件
+ * 加载vue文件
  * @param {string} url vue文件的url地址
  * @param {string} containerId div容器id
  * @param {string} mountedElementId 挂载节点id,不传则挂在body下面
@@ -62,6 +63,7 @@ async function loadVue(url, containerId, mountedElementId = undefined) {
     let templateResult = regTmpl.exec(data);
     let syleResult = regStyle.exec(data);
     let scopedStyleResult = regScopedStyle.exec(data);
+    let scriptResult = regScript.exec(data);
 
     if (templateResult) {
         if ($('#' + containerId).length == 0) {
@@ -100,6 +102,38 @@ async function loadVue(url, containerId, mountedElementId = undefined) {
                 let styleId_1 = 'style-' + containerId + '-scoped';
                 css = '<style id="' + styleId_1 + '" type="text/css">' + css.trim() + '</style>';
                 $('head').append(css);
+            }
+
+            //加载script
+            if (scriptResult) {
+                /* 
+                let scriptId = 'script-' + containerId;
+                let scriptElement = document.createElement('script');
+                scriptElement.id = scriptId;
+                scriptElement.type = 'module';
+                scriptElement.textContent = scriptResult[1].trim(); // 直接写入代码
+                document.body.appendChild(scriptElement); 
+                */
+
+                // 获取当前页面的基础路径
+                const baseURL = new URL(window.location.href).origin;
+
+                // 1. 创建虚拟模块
+                let moduleCode = scriptResult[1].trim();
+                // 转换模块代码中的路径
+                moduleCode = moduleCode
+                    .replace(/from\s+["'](\/[^"']+)["']/g, `from '${baseURL}$1'`)
+                    .replace(/from\s+["'](@\/[^"']+)["']/g, (m, p1) => `from '${baseURL}/${p1.replace('@/', '')}'`);
+                const blob = new Blob([moduleCode], { type: 'text/javascript' });
+                const moduleUrl = URL.createObjectURL(blob);
+
+                // 2. 动态导入模块
+                const module = await import(moduleUrl);
+
+                // 3. 清理资源
+                URL.revokeObjectURL(moduleUrl);
+
+                return module;
             }
         }
     } else {

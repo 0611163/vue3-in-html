@@ -2,14 +2,16 @@ import { useMap } from "./supermap.js";
 import { createMarker } from './marker.js'
 import { markerIcon, qiangjiIcon } from './icon.js'
 import { initControlButtons } from '../views/controlButtons.js'
-import { componentName } from '../../components/Maps/SuperMapPage.js'
 import { useVuexStore } from './vuexStore.js'
+import { loadVue } from "/js/loadHtml.js";
 
-function useMapIndex() {
+async function useMapIndex() {
 
     let vuexStoreContainer = useVuexStore();
 
     let { map, deviceLayer, switchMap } = useMap();
+
+    let componentName = "supermapPage";
 
     initControlButtons(map, componentName, vuexStoreContainer);
 

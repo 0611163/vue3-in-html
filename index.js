@@ -1,7 +1,8 @@
-import { useApp } from './App.js'
 import { vuexStore, CHANGE_HELLOVUE3_VISIBLE } from './js/vuexStore.js'
+import { loadVue } from '../js/loadHtml.js'
 
 async function init() {
+    let { useApp } = await loadVue('App.vue', 'app');
 
     await useApp();
 
