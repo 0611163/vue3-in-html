@@ -38,7 +38,7 @@
 4. 电子地图代码是我从 https://gitee.com/s0611163/leaflet-demo 复制过来的，代码本身与vue没有瓜葛，额外写了一个组件MapPage用来引入电子地图功能，
    使用这种方式不需要把地图相关代码直接写在vue的组件中
 
-## 关于 controlButtons.js 和 switchMapControl.js
+## 关于 controlButtons.js 和 switchMapControl.vue
 
     这两个电子地图相关的组件并没有使用 Vue.defineComponent 定义，而是使用 Vue.createApp 的方式定义的，是为了测试不同的实现方式；
     controlButtons 直接使用 jquery 实现，并混合了 vue；
