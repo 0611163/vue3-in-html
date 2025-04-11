@@ -128,10 +128,23 @@ async function loadVue(url, containerId, mountedElementId, appendTemplateToBody)
 
                 // 1. 创建虚拟模块
                 let moduleCode = scriptResult[1].trim();
+
                 // 转换模块代码中的路径
+                let path = "/";
+                let pos = url.lastIndexOf('/');
+                if (pos != -1) {
+                    path = url.substring(0, pos + 1);
+                }
                 moduleCode = moduleCode
-                    .replace(/from\s+["'](\/[^"']+)["']/g, `from '${baseURL}$1'`)
+                    .replace(/from\s+["'](([.\/]*)[^"'@]+)["']/g, (m, p1, p2) => {
+                        if (p2.indexOf('.') == 0) { // ./或../开头
+                            return `from '${baseURL}${path}${p1}'`;
+                        } else {
+                            return `from '${baseURL}${p1}'`;
+                        }
+                    },)
                     .replace(/from\s+["'](@\/[^"']+)["']/g, (m, p1) => `from '${baseURL}/${p1.replace('@/', '')}'`);
+
                 const blob = new Blob([moduleCode], { type: 'text/javascript' });
                 const moduleUrl = URL.createObjectURL(blob);
 
