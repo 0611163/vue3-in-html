@@ -60,7 +60,7 @@ async function loadHtml(url, containerId, mountedElementId = undefined) {
  * @param {string} mountedElementId 挂载节点id,不传则挂在body下面
  * @param {boolean} appendTemplateToBody 是否在body中append模板(子组件这里不需要添加到body)
  */
-async function loadVue(url, containerId, mountedElementId = undefined, appendTemplateToBody) {
+async function loadVue(url, containerId, mountedElementId, appendTemplateToBody) {
     const data = await request(url);
 
     let templateResult = regTmpl.exec(data);
