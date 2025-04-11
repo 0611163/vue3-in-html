@@ -66,7 +66,7 @@
         <!-- 不缓存路由组件 -->
         <!-- <router-view></router-view> -->
 
-        <!-- 缓存路线组件 -->
+        <!-- 缓存路由组件 -->
         <router-view v-slot="{ Component }">
           <keep-alive>
             <component :is="Component"></component>
