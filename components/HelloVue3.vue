@@ -64,8 +64,7 @@
 </template>
 
 <script>
-import { loadVue } from "/js/loadHtml.js";
-import { loadTemplate } from "/js/loadVue.js";
+import { loadVue, getVueTemplateFromCache } from "/js/loadHtml.js";
 import { vuexStore, CHANGE_MAP_TYPE } from "/js/vuexStore.js";
 import {
   defineComponent,
@@ -153,14 +152,11 @@ function changeMap(type) {
 let componentName = "helloVue3";
 
 async function createHelloVue3() {
-  let [template, TestDialog] = await Promise.all([
-    loadTemplate(componentName),
-    createTestDialog(),
-  ]);
+  let [TestDialog] = await Promise.all([createTestDialog()]);
 
   return defineComponent({
     name: componentName,
-    template: template,
+    template: getVueTemplateFromCache(componentName),
     props: {
       title: String,
     },

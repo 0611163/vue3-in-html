@@ -78,7 +78,6 @@
 </template>
 
 <script>
-import { loadApp } from "/js/loadVue.js";
 import { zhCn } from "/libs/element-plus/locale/zh-cn.js";
 import { createRouter } from "/js/useRouter.js";
 import { loadVue } from "/js/loadHtml.js";
@@ -88,11 +87,7 @@ let { createTest } = await loadVue("/components/Test.vue", "test");
 let { TestAsync } = await loadVue("/components/TestAsync.vue", "testAsync");
 
 async function useApp() {
-  let [_, Test, router] = await Promise.all([
-    loadApp("#app"),
-    createTest(),
-    createRouter(),
-  ]);
+  let [Test, router] = await Promise.all([createTest(), createRouter()]);
 
   const app = Vue.createApp({
     name: "App",

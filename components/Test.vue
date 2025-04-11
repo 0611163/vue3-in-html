@@ -33,8 +33,7 @@
 </template>
 
 <script>
-import { loadVue } from "/js/loadHtml.js";
-import { loadTemplate } from "/js/loadVue.js";
+import { loadVue, getVueTemplateFromCache } from "/js/loadHtml.js";
 import {
   defineComponent,
   reactive,
@@ -50,14 +49,11 @@ let { createTest2 } = await loadVue("/components/Test2/Test2.vue", "test2");
 let componentName = "test";
 
 async function createTest() {
-  let [template, Test2] = await Promise.all([
-    loadTemplate(componentName),
-    createTest2(),
-  ]);
+  let [Test2] = await Promise.all([createTest2()]);
 
   return defineComponent({
     name: componentName,
-    template: template,
+    template: getVueTemplateFromCache(componentName),
     components: {
       Test2,
     },

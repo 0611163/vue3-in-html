@@ -33,7 +33,7 @@
 <script>
 //测试异步组件
 
-import { loadTemplate } from "/js/loadVue.js";
+import { getVueTemplateFromCache } from "/js/loadHtml.js";
 import {
   defineComponent,
   defineAsyncComponent,
@@ -48,11 +48,9 @@ import {
 let componentName = "testAsync";
 
 async function createTestAsync() {
-  let template = await loadTemplate(componentName);
-
   return defineComponent({
     name: componentName,
-    template: template,
+    template: getVueTemplateFromCache(componentName),
     beforeCreate() {},
     setup(props, context) {
       return {};

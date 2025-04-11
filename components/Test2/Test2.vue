@@ -35,7 +35,7 @@
  * 测试组件在子路径下
  */
 
-import { loadTemplate } from "/js/loadVue.js";
+import { getVueTemplateFromCache } from "/js/loadHtml.js";
 import {
   defineComponent,
   reactive,
@@ -49,11 +49,9 @@ import {
 let componentName = "test2";
 
 async function createTest2() {
-  let template = await loadTemplate(componentName, "Test2/");
-
   return defineComponent({
     name: componentName,
-    template: template,
+    template: getVueTemplateFromCache(componentName),
     beforeCreate() {},
     setup(props, context) {
       return {};

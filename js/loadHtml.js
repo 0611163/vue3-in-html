@@ -6,6 +6,8 @@ let regScopedStyle = /<style[^>]*scoped[^>]*>((?:(?!<\/style[^>]*>)[\s\S])*)<\/s
 let regScript = /<script[^>]*>([\s\S]*)<\/script[^>]*>/;
 let regCssItem = /([^\{\}]*\{[^\{\}]*\})/ig;
 
+let templateMap = new Map();
+
 /**
  * 请求文件
  * @param {string} url 文件地址
@@ -56,8 +58,9 @@ async function loadHtml(url, containerId, mountedElementId = undefined) {
  * @param {string} url vue文件的url地址
  * @param {string} containerId div容器id
  * @param {string} mountedElementId 挂载节点id,不传则挂在body下面
+ * @param {boolean} appendTemplateToBody 是否在body中append模板(子组件这里不需要添加到body)
  */
-async function loadVue(url, containerId, mountedElementId = undefined) {
+async function loadVue(url, containerId, mountedElementId = undefined, appendTemplateToBody) {
     const data = await request(url);
 
     let templateResult = regTmpl.exec(data);
@@ -71,11 +74,16 @@ async function loadVue(url, containerId, mountedElementId = undefined) {
             let containerDiv = '<div id="' + containerId + '"></div>';
             if (mountedElementId) {
                 $('#' + mountedElementId).append(containerDiv);
+                $('#' + containerId).html(templateResult[1]);
             } else {
-                $('body').append(containerDiv);
+                if (appendTemplateToBody) {
+                    $('body').append(containerDiv);
+                    $('#' + containerId).html(templateResult[1]);
+                }
             }
 
-            $('#' + containerId).html(templateResult[1]);
+            // 缓存template
+            templateMap.set(containerId.toUpperCase(), `<div id="${containerId}">${templateResult[1]}</div>`);
 
             //加载style
             if (syleResult) {
@@ -204,4 +212,11 @@ function loadVueScopedCss(data, componentName) {
     }
 }
 
-export { request, loadHtml, loadVue, getVueTemplate, loadVueCss, loadVueScopedCss }
+function getVueTemplateFromCache(containerId) {
+    containerId = containerId.toUpperCase();
+    if (templateMap.has(containerId)) {
+        return templateMap.get(containerId);
+    }
+}
+
+export { request, loadHtml, loadVue, getVueTemplate, loadVueCss, loadVueScopedCss, getVueTemplateFromCache }

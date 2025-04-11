@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { loadTemplate } from "/js/loadVue.js";
+import { getVueTemplateFromCache } from "/js/loadHtml.js";
 import { vuexStore } from "/js/vuexStore.js";
 import {
   defineComponent,
@@ -55,11 +55,9 @@ function OK() {
 let componentName = "testDialog";
 
 async function createTestDialog() {
-  let template = await loadTemplate(componentName);
-
   return defineComponent({
     name: componentName,
-    template,
+    template: getVueTemplateFromCache(componentName),
     props: {
       visible: Boolean,
     },

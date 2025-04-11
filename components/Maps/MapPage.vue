@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { loadTemplate } from "/js/loadVue.js";
+import { getVueTemplateFromCache } from "/js/loadHtml.js";
 import { useMapIndex } from "/map/js/index.js";
 import {
   defineComponent,
@@ -98,12 +98,10 @@ let switchMap;
 
 //组件定义
 async function createMapPage() {
-  let template = await loadTemplate(componentName, "Maps/");
-
   return defineComponent({
     name: componentName,
     components: {},
-    template: template,
+    template: getVueTemplateFromCache(componentName),
     beforeCreate() {},
     async mounted() {
       $(window).on("resize", resize);

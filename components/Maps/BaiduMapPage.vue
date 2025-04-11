@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { loadTemplate } from "/js/loadVue.js";
+import { getVueTemplateFromCache } from "/js/loadHtml.js";
 import { useMapIndex } from "/map/js/baiduMapIndex.js";
 import {
   defineComponent,
@@ -102,12 +102,10 @@ let switchMap;
 async function createBaiduMapPage() {
   Msg.show("百度地图是一个异步组件，现在才创建");
 
-  const template = await loadTemplate(componentName, "Maps/");
-
   return defineComponent({
     name: componentName,
     components: {},
-    template,
+    template: getVueTemplateFromCache(componentName),
     beforeCreate() {},
     async mounted() {
       $(window).on("resize", resize);
